@@ -1,0 +1,30 @@
+.logomain{
+    display: flex;
+    column-gap: 10px;
+    align-items: center;
+    padding: 15px 30px;
+    border: 1px solid #03014C;
+    width: 220px; 
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 30px;
+}
+.googleic{
+    color: #03014C;
+    font-size: 13.338px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: 0.267px; 
+}
+.inputboxes{
+    display: flex;
+    flex-direction: column;
+    row-gap: 32px;
+    width: 400px;
+}
+.bannerc{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
