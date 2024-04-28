@@ -9,6 +9,7 @@ import Inputbox from '../../utilities/Inputbox';
 import Button from '@mui/material/Button';
 import Images from '../../utilities/Images';
 import logobanner from '../../assets/images/chatban.jpg'
+import TextField from '@mui/material/TextField';
 
 
 // const Item = styled(Paper)(({ theme }) => ({
@@ -61,7 +62,13 @@ const Login = () => {
               </div>
               <div className="inputboxes">
                   <Inputbox variant="standard" placeholder="Email Address"/>
-                  <Inputbox variant="standard" placeholder="Password"/>
+                  <TextField
+                    id="standard-password-input"
+                    label="Password"
+                    type="password"
+                    autoComplete="current-password"
+                    variant="standard"
+                  />
               </div>
               <BootstrapButton variant="contained" disableRipple>
                  Login to Continue
