@@ -1,0 +1,28 @@
+.userlistMain{
+    height: 400px;
+    width: 400px;
+    margin-top: 30px;
+    border-radius: 8px;
+    padding: 20px 28px;
+    box-shadow: 1px 2px 5px 0px rgba(0,0,0,0.2);
+    -webkit-box-shadow: 1px 2px 5px 0px rgba(0,0,0,0.2);
+    -moz-box-shadow: 1px 2px 5px 0px rgba(0,0,0,0.2);
+}
+.icon_and_heading{
+    display: flex;
+    justify-content: space-between;
+}
+.userlist_inner{
+    height: 300px;
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;
+}
+
+.userlist_item{
+    width: 100%;
+    height: 50px;
+    background-color: red;
+    margin-bottom: 15px;
+}
+

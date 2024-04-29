@@ -24,9 +24,20 @@
     row-gap: 35px;
     align-items: center;
 }
-.sidebarItem ul li svg{
+.sidebarItem ul li a svg{
     color: #fff;
     font-size: 46px;
+}
+.sidebarItem ul li a{
+    display: inline-block;
+    padding: 11px 32px;
+    border-radius: 9px;
+}
+.sidebarItem ul li a.active{
+    background-color: #fff;
+}
+.sidebarItem ul li a.active svg{
+    color: #5F35F5;
 }
 .sidebarLogout{
     display: flex;
