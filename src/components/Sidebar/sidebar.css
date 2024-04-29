@@ -1,0 +1,34 @@
+.sidebar_main{
+    height: 100vh;
+    width: 100%;
+    padding: 30px;
+}
+.sidebar_inner{
+    height: 100%;
+    width: 100%;
+    background-color: #5F35F5;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding: 24px 0;
+}
+
+.sidebarProfile{
+    display: flex;
+    justify-content: center;
+}
+.sidebarItem ul{
+    display: flex;
+    flex-direction: column;
+    row-gap: 35px;
+    align-items: center;
+}
+.sidebarItem ul li svg{
+    color: #fff;
+    font-size: 46px;
+}
+.sidebarLogout{
+    display: flex;
+    justify-content: center;
+}
