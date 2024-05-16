@@ -10,6 +10,8 @@ import Button from '@mui/material/Button';
 import Images from '../../utilities/Images';
 import logobanner from '../../assets/images/chatban.jpg'
 import TextField from '@mui/material/TextField';
+import { LiaEyeSolid } from "react-icons/lia";
+import { useState } from 'react';
 
 
 // const Item = styled(Paper)(({ theme }) => ({
@@ -31,6 +33,13 @@ const Headinglogin = styled(Typography)({
 const Glogo = styled(FcGoogle)({
   fontSize: "33px",
 });
+const Hide = styled(LiaEyeSolid)({
+  fontSize: "25px",
+  position: "absolute",
+  top: "97px",
+  right: "4px",
+  cursor: "pointer"
+})
 
 const BootstrapButton = styled(Button)({
   boxShadow: 'none',
@@ -47,6 +56,16 @@ const BootstrapButton = styled(Button)({
 });
 
 const Login = () => {
+
+  let [show,setShow] = useState(true)
+
+  let handleShow = () =>{
+    if(show){
+      setShow(false)
+    }else{
+      setShow(true)
+    }
+  }
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container>
@@ -65,10 +84,11 @@ const Login = () => {
                   <TextField
                     id="standard-password-input"
                     label="Password"
-                    type="password"
+                    type={show ? "password" : "text"}
                     autoComplete="current-password"
                     variant="standard"
                   />
+                  <Hide onClick={handleShow} />
               </div>
               <BootstrapButton variant="contained" disableRipple>
                  Login to Continue

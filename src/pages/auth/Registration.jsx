@@ -15,6 +15,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
+import { LiaEyeSolid } from "react-icons/lia";
+import { useState } from 'react';
+
 
 const Headinglogin = styled(Typography)({
   color: '#03014C',
@@ -24,7 +27,13 @@ const Headinglogin = styled(Typography)({
   marginBottom: "12px",
 });
 
-
+const Hide = styled(LiaEyeSolid)({
+  fontSize: "20px",
+  position: "absolute",
+  top: "278px",
+  right: "8px",
+  cursor: "pointer"
+})
 
 const BootstrapButton = styled(Button)({
   boxShadow: 'none',
@@ -43,6 +52,17 @@ const BootstrapButton = styled(Button)({
 
 
 const Registration = () => {
+
+  let [show,setShow] = useState(true)
+
+  let handleShow = () =>{
+    if(show){
+      setShow(false)
+    }else{
+      setShow(true)
+    }
+  }
+  
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container>
@@ -72,15 +92,16 @@ const Registration = () => {
                  <TextField
                     id="standard-password-input"
                     label="Password"
-                    type="password"
+                    type={show ? "password" : "text"}
                     autoComplete="current-password"
                     variant="standard"
                   />
+                  <Hide onClick={handleShow} />
               </div>
               <BootstrapButton variant="contained" disableRipple>
                   Sign up
               </BootstrapButton>
-              <span style={{color:"#03014C", fontSize:"14px"}}>Already  have an account ?  <a href="/" style={{color:"#EA6C00"}}>Sign In</a></span>
+              <span style={{color:"#03014C", fontSize:"14px"}}>Already  have an account ?  <a href="/" style={{color:"#EA6C00"}}>Log In</a></span>
           </div>
 
         </Grid>

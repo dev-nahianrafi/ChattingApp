@@ -22,6 +22,7 @@
     flex-direction: column;
     row-gap: 32px;
     width: 400px;
+    position: relative;
 }
 .bannerc{
     width: 100%;

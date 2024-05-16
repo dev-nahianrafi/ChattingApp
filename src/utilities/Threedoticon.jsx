@@ -1,4 +1,6 @@
-// import React from 'react'
+// eslint-disable-next-line no-unused-vars
+import React from 'react'
+
 import { BsThreeDotsVertical } from "react-icons/bs";
 
 const Threedoticon = () => {
