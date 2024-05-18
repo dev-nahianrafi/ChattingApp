@@ -8,6 +8,7 @@ ul,ol{
 }
 a{
     text-decoration: none;
+    display: inline-block;
 }
 .homeheading{
     color: #000;

@@ -12,6 +12,12 @@ import logobanner from '../../assets/images/chatban.jpg'
 import { LiaEyeSolid } from "react-icons/lia";
 import { useState } from 'react';
 import { useFormik } from 'formik';
+import loginvalidation from '../../validation/Loginvalidation';
+import * as React from 'react';
+import Backdrop from '@mui/material/Backdrop';
+import Modal from '@mui/material/Modal';
+import Fade from '@mui/material/Fade';
+
 
 
 // const Item = styled(Paper)(({ theme }) => ({
@@ -21,6 +27,17 @@ import { useFormik } from 'formik';
 //   textAlign: 'center',
 //   color: theme.palette.text.secondary,
 // }));
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 500,
+  bgcolor: 'background.paper',
+  border: 'none',
+  boxShadow: 24,
+  p: 4,
+};
 
 const Headinglogin = styled(Typography)({
   color: '#03014C',
@@ -56,15 +73,21 @@ const BootstrapButton = styled(Button)({
 });
 
 const Login = () => {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  let initialvalues = {
+    email: '',
+    password: '',
+  }
 
   const formik = useFormik({
-    initialValues: {
-      email: '',
-      password: '',
-    },
-
-    onSubmit: values => {
+    initialValues: initialvalues,
+    validationSchema: loginvalidation,
+    onSubmit: (values, actions) => {
       console.log(values);
+      actions.resetForm()
       // alert(JSON.stringify(values, null, 2));
     },
   });
@@ -93,32 +116,43 @@ const Login = () => {
               </div>
               <form action="#" onSubmit={formik.handleSubmit}>
                 <div className="inputboxes">
-                    <Inputbox
-                      variant="standard" 
-                      placeholder="Email Address"
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formik.values.email}
-                      onChange={formik.handleChange}
-                    />
-                    <Inputbox
-                        variant="standard"
-                        placeholder="Password"
-                        type={show ? "password" : "text"}
-                        autoComplete="current-password"
-                        id="password"
-                        name="password"
-                        value={formik.values.password}
-                        onChange={formik.handleChange}
-                    />
+                    <div>
+                        <Inputbox
+                          variant="standard" 
+                          placeholder="Email Address"
+                          id="email"
+                          name="email"
+                          type="email"
+                          value={formik.values.email}
+                          onChange={formik.handleChange}
+                        />
+                        {formik.touched.email && formik.errors.email ? (
+                        <p style={{color: 'red', margin:"15px 0"}}>{formik.errors.email}</p>
+                        ) : null}
+                    </div>
+                    <div>
+                      <Inputbox
+                          variant="standard"
+                          placeholder="Password"
+                          type={show ? "password" : "text"}
+                          autoComplete="current-password"
+                          id="password"
+                          name="password"
+                          value={formik.values.password}
+                          onChange={formik.handleChange}
+                      />
+                      {formik.touched.password && formik.errors.password ? (
+                        <p style={{color: 'red', margin:"15px 0"}}>{formik.errors.password}</p>
+                        ) : null}
+                    </div>
                     <Hide onClick={handleShow} />
                 </div>
                 <BootstrapButton type='submit' variant="contained" disableRipple>
                   Login to Continue
                 </BootstrapButton>
               </form>
-              <span style={{color:"#03014C", fontSize:"14px"}}>Don’t have an account ? <a href="/registration" style={{color:"#EA6C00"}}>Sign up</a></span>
+              <span style={{color:"#03014C", fontSize:"14px",}}>Don’t have an account ? <a href="/registration" style={{color:"#EA6C00"}}>Sign up</a></span>
+              <p onClick={handleOpen} style={{color: 'blue', marginTop: '10px', cursor: 'pointer'}}>Forget Password?</p>
           </div>
 
         </Grid>
@@ -128,6 +162,37 @@ const Login = () => {
           </div>
         </Grid>
       </Grid>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
+      >
+        <Fade in={open}>
+          <Box sx={style}>
+            <h3 style={{marginBottom: '15px'}}>Enter Your Email</h3>
+            <div>
+              <Inputbox
+                variant="standard" 
+                placeholder="Email Address"
+                id="forgetemail"
+                name="forgetemail"
+                type="email"
+              />
+              <BootstrapButton type='submit' variant="contained" disableRipple>
+                    forget password
+              </BootstrapButton>      
+            </div>
+          </Box>
+        </Fade>
+      </Modal>
     </Box>
   )
 }
