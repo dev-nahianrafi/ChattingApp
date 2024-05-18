@@ -9,9 +9,9 @@ import Inputbox from '../../utilities/Inputbox';
 import Button from '@mui/material/Button';
 import Images from '../../utilities/Images';
 import logobanner from '../../assets/images/chatban.jpg'
-import TextField from '@mui/material/TextField';
 import { LiaEyeSolid } from "react-icons/lia";
 import { useState } from 'react';
+import { useFormik } from 'formik';
 
 
 // const Item = styled(Paper)(({ theme }) => ({
@@ -57,6 +57,18 @@ const BootstrapButton = styled(Button)({
 
 const Login = () => {
 
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+
+    onSubmit: values => {
+      console.log(values);
+      // alert(JSON.stringify(values, null, 2));
+    },
+  });
+
   let [show,setShow] = useState(true)
 
   let handleShow = () =>{
@@ -79,20 +91,33 @@ const Login = () => {
                 <Glogo />
                 <a href="#" className='googleic'>Login with Google</a>
               </div>
-              <div className="inputboxes">
-                  <Inputbox variant="standard" placeholder="Email Address"/>
-                  <TextField
-                    id="standard-password-input"
-                    label="Password"
-                    type={show ? "password" : "text"}
-                    autoComplete="current-password"
-                    variant="standard"
-                  />
-                  <Hide onClick={handleShow} />
-              </div>
-              <BootstrapButton variant="contained" disableRipple>
-                 Login to Continue
-              </BootstrapButton>
+              <form action="#" onSubmit={formik.handleSubmit}>
+                <div className="inputboxes">
+                    <Inputbox
+                      variant="standard" 
+                      placeholder="Email Address"
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formik.values.email}
+                      onChange={formik.handleChange}
+                    />
+                    <Inputbox
+                        variant="standard"
+                        placeholder="Password"
+                        type={show ? "password" : "text"}
+                        autoComplete="current-password"
+                        id="password"
+                        name="password"
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                    />
+                    <Hide onClick={handleShow} />
+                </div>
+                <BootstrapButton type='submit' variant="contained" disableRipple>
+                  Login to Continue
+                </BootstrapButton>
+              </form>
               <span style={{color:"#03014C", fontSize:"14px"}}>Don’t have an account ? <a href="/registration" style={{color:"#EA6C00"}}>Sign up</a></span>
           </div>
 

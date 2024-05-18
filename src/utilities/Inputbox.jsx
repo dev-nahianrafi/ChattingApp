@@ -4,10 +4,20 @@ import TextField from '@mui/material/TextField';
 
 
 // eslint-disable-next-line react/prop-types
-const Inputbox = ({variant,placeholder}) => {
+const Inputbox = ({variant,placeholder,autoComplete,type,id,name,value,onChange}) => {
   return (
     <>
-      <TextField fullWidth id="standard-basic" label={placeholder} variant={variant} />
+      <TextField 
+      fullWidth 
+      id={id}
+      label={placeholder} 
+      variant={variant} 
+      autoComplete={autoComplete}
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      />
     </>
   )
 }
