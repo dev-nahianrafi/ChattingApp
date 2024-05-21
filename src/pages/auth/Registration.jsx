@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // import React from 'react'
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -17,7 +18,9 @@ import FormLabel from '@mui/material/FormLabel';
 import { LiaEyeSolid } from "react-icons/lia";
 import { useState } from 'react';
 import { useFormik } from 'formik';
-import Registrationvalidation from '../../validation/Registration';
+import Registrationvalidation from '../../validation/RegistrationValidation';
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
+import { getDatabase, ref, set } from "firebase/database";
 
 
 
@@ -64,10 +67,12 @@ const Registration = () => {
     }
   }
 
+  const auth = getAuth();
+  const db = getDatabase();
+
   const initialValuesreg = {
     email: '',
     name: '',
-    gender: '',
     password: ''
   }
 
@@ -75,8 +80,37 @@ const Registration = () => {
     initialValues: initialValuesreg,
     validationSchema: Registrationvalidation,
 
-    onSubmit: values => {
-      console.log(values);
+    onSubmit: (values,actions) => {
+      // console.log(values);
+      actions.resetForm()
+      createUserWithEmailAndPassword(auth, values.email, values.password)
+          .then((userCredential) => {
+            sendEmailVerification(auth.currentUser)
+              .then(() => {
+                updateProfile(auth.currentUser, {
+                  displayName: values.name, 
+                  // photoURL: "https://example.com/jane-q-user/profile.jpg"
+                }).then(() => {
+                  // console.log(userCredential.user)
+                  set(ref(db, 'users/' + userCredential.user.uid), {
+                    displayName: userCredential.user.displayName,
+                    email: userCredential.user.email,
+                    profile_picture : userCredential.user.photoURL
+                  }).then(()=>{
+                    console.log("done");
+                  });                
+                }).catch((error) => {
+                  console.log("opps ! something is wrong");
+                  // An error occurred
+                  // ...
+                });
+                
+              });
+            // console.log(userCredential);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       // alert(JSON.stringify(values, null, 2));
     },
   });
@@ -120,7 +154,7 @@ const Registration = () => {
                       <p style={{color: 'red', marginTop:"10px"}}>{formik.errors.name}</p>
                       ) : null}
                   </div>
-                  <div>
+                  {/* <div>
                     <FormControl>
                         <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
                         <RadioGroup
@@ -145,7 +179,7 @@ const Registration = () => {
                           />
                         </RadioGroup>
                     </FormControl>
-                  </div>                 
+                  </div>*/}
                   <div className='hideshow'>
                     <Inputbox
                         variant="standard"

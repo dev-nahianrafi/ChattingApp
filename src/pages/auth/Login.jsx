@@ -17,6 +17,8 @@ import * as React from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
 
 
 
@@ -73,6 +75,7 @@ const BootstrapButton = styled(Button)({
 });
 
 const Login = () => {
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -82,14 +85,29 @@ const Login = () => {
     password: '',
   }
 
+  
+
+const auth = getAuth();
+
   const formik = useFormik({
     initialValues: initialvalues,
     validationSchema: loginvalidation,
     onSubmit: (values, actions) => {
-      console.log(values);
+      // console.log(values);
       actions.resetForm()
-      // alert(JSON.stringify(values, null, 2));
-    },
+        signInWithEmailAndPassword(auth, values.email, values.password)
+          .then((userCredential) => {
+            console.log(values);
+            console.log(userCredential);
+
+          })
+          .catch((error) => {
+            console.log(error);
+            // const errorCode = error.code;
+            // const errorMessage = error.message;
+          });
+        // alert(JSON.stringify(values, null, 2));
+      },
   });
 
   let [show,setShow] = useState(true)
@@ -154,7 +172,6 @@ const Login = () => {
               <span style={{color:"#03014C", fontSize:"14px",}}>Don’t have an account ? <a href="/registration" style={{color:"#EA6C00"}}>Sign up</a></span>
               <p onClick={handleOpen} style={{color: 'blue', marginTop: '10px', cursor: 'pointer'}}>Forget Password?</p>
           </div>
-
         </Grid>
         <Grid item xs={6}>
           <div style={{width: "100%", height: "100vh"}}>

@@ -23,10 +23,5 @@ const Registrationvalidation = Yup.object({
             .required('Please Enter Your Password')
   })
 
-// const Registration = () => {
-//   return (
-//     <div>Registration</div>
-//   )
-// }
 
 export default Registrationvalidation
