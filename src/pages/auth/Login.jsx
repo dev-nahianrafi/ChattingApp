@@ -18,6 +18,10 @@ import Backdrop from '@mui/material/Backdrop';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
+import { ThreeDots } from 'react-loader-spinner';
+
 
 
 
@@ -53,10 +57,10 @@ const Glogo = styled(FcGoogle)({
   fontSize: "33px",
 });
 const Hide = styled(LiaEyeSolid)({
-  fontSize: "25px",
+  fontSize: "20px",
   position: "absolute",
-  top: "97px",
-  right: "4px",
+  top: "10px",
+  right: "8px",
   cursor: "pointer"
 })
 
@@ -64,7 +68,7 @@ const BootstrapButton = styled(Button)({
   boxShadow: 'none',
   textTransform: 'none',
   fontSize: 20,
-  padding: '26px 12px',
+  padding: '20px 12px',
   border: '1px solid',
   lineHeight: 1.5,
   backgroundColor: '#5F34F5',
@@ -79,39 +83,76 @@ const Login = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const navigate = useNavigate();
+  const [loder,setloder] = useState(false)
+
 
   let initialvalues = {
     email: '',
     password: '',
   }
 
-  
-
-const auth = getAuth();
+  const auth = getAuth();
 
   const formik = useFormik({
     initialValues: initialvalues,
     validationSchema: loginvalidation,
     onSubmit: (values, actions) => {
       // console.log(values);
-      actions.resetForm()
+      setloder(true)
         signInWithEmailAndPassword(auth, values.email, values.password)
           .then((userCredential) => {
-            console.log(values);
-            console.log(userCredential);
-
+            const user = userCredential.user
+            if(user.emailVerified){
+              toast.success('Login Success', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+              setInterval(()=>{
+                navigate("/home")
+              },2000);
+              setloder(false)
+            }else{
+              toast.error('Please Verify Your Email', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                });
+              setloder(false)
+              actions.resetForm()
+            }
           })
           .catch((error) => {
             console.log(error);
-            // const errorCode = error.code;
-            // const errorMessage = error.message;
+            toast.error('Checked Your Id Or Password...!', {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              });
+            setloder(false)
           });
         // alert(JSON.stringify(values, null, 2));
       },
   });
 
+  // hide show oparation start
   let [show,setShow] = useState(true)
-
   let handleShow = () =>{
     if(show){
       setShow(false)
@@ -119,8 +160,21 @@ const auth = getAuth();
       setShow(true)
     }
   }
+  // hide show oparation end
   return (
     <Box sx={{ flexGrow: 1 }}>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Grid container>
         <Grid item xs={6} style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
           <div>
@@ -148,7 +202,7 @@ const auth = getAuth();
                         <p style={{color: 'red', margin:"15px 0"}}>{formik.errors.email}</p>
                         ) : null}
                     </div>
-                    <div>
+                    <div className='hideshowtwo'>
                       <Inputbox
                           variant="standard"
                           placeholder="Password"
@@ -162,11 +216,25 @@ const auth = getAuth();
                       {formik.touched.password && formik.errors.password ? (
                         <p style={{color: 'red', margin:"15px 0"}}>{formik.errors.password}</p>
                         ) : null}
-                    </div>
                     <Hide onClick={handleShow} />
+                    </div>
                 </div>
-                <BootstrapButton type='submit' variant="contained" disableRipple>
-                  Login to Continue
+                <BootstrapButton disabled={loder} type='submit' variant="contained" disableRipple>
+                  {loder ?
+                    <ThreeDots
+                    visible={true}
+                    height="40"
+                    width="40"
+                    color="#fff"
+                    radius="9"
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                    />
+                    :
+                    "Login to Continue"
+                  }
+                  
                 </BootstrapButton>
               </form>
               <span style={{color:"#03014C", fontSize:"14px",}}>Don’t have an account ? <a href="/registration" style={{color:"#EA6C00"}}>Sign up</a></span>

@@ -21,9 +21,12 @@ import { useFormik } from 'formik';
 import Registrationvalidation from '../../validation/RegistrationValidation';
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
+import { ToastContainer, toast } from 'react-toastify';
+import { ThreeDots } from 'react-loader-spinner';
+import { useNavigate } from "react-router-dom";
 
 
-
+// meterial style start
 const Headinglogin = styled(Typography)({
   color: '#03014C',
   fontSize: "33px",
@@ -54,9 +57,12 @@ const BootstrapButton = styled(Button)({
   marginTop: "50px",
   marginBottom: "35px"
 });
+// meterial style end
 
 
 const Registration = () => {
+
+  // function start
 
   let [show,setShow] = useState(true)
   let handleShow = () =>{
@@ -66,15 +72,25 @@ const Registration = () => {
       setShow(true)
     }
   }
+  // show hide
+
+  let [loading, setloading] = useState(false)
+  // loading hook
+
+  const navigate = useNavigate();
 
   const auth = getAuth();
   const db = getDatabase();
+  // firebase
+
 
   const initialValuesreg = {
     email: '',
     name: '',
     password: ''
   }
+  // formik
+
 
   const formik = useFormik({
     initialValues: initialValuesreg,
@@ -82,6 +98,7 @@ const Registration = () => {
 
     onSubmit: (values,actions) => {
       // console.log(values);
+      setloading(true)
       actions.resetForm()
       createUserWithEmailAndPassword(auth, values.email, values.password)
           .then((userCredential) => {
@@ -97,26 +114,63 @@ const Registration = () => {
                     email: userCredential.user.email,
                     profile_picture : userCredential.user.photoURL
                   }).then(()=>{
-                    console.log("done");
+                    // console.log("done");
+                      toast.success('Registration Success', {
+                        position: "top-right",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                      });
+                    setloading(false)  
+                    navigate("/")
                   });                
                 }).catch((error) => {
                   console.log("opps ! something is wrong");
-                  // An error occurred
-                  // ...
-                });
-                
+                  setloading(false)
+                });                
               });
-            // console.log(userCredential);
           })
           .catch((error) => {
             console.log(error);
+            setloading(false)
           });
       // alert(JSON.stringify(values, null, 2));
     },
   });
   
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <>
+    {loading &&
+      <div className='loading'>
+      <ThreeDots
+        visible={true}
+        height="120"
+        width="120"
+        color="#fff"
+        radius="9"
+        ariaLabel="three-dots-loading"
+        wrapperStyle={{}}
+        wrapperClass=""
+      />
+      </div>
+    }
+      <Box sx={{ flexGrow: 1 }}>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Grid container>
         <Grid item xs={6} style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
           <div>
@@ -211,7 +265,8 @@ const Registration = () => {
           </div>
         </Grid>
       </Grid>
-    </Box>
+      </Box>
+    </>
 
   )
 }
