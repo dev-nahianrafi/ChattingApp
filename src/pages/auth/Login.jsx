@@ -1,6 +1,6 @@
+/* eslint-disable no-unused-vars */
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-// import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { Typography } from '@mui/material';
 import { FcGoogle } from "react-icons/fc";
@@ -17,9 +17,9 @@ import * as React from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup} from "firebase/auth";
 import { ToastContainer, toast } from 'react-toastify';
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { ThreeDots } from 'react-loader-spinner';
 
 
@@ -85,15 +85,70 @@ const Login = () => {
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
   const [loder,setloder] = useState(false)
+  const [forgetpass, setforgetpass] = useState("")
+  const provider = new GoogleAuthProvider();
+  const auth = getAuth();
+  
+
+  // forget pass oparation stat
+  let handleforgetpss = () =>{
+    if(!forgetpass){
+      console.log("type something");
+    }else{
+      sendPasswordResetEmail(auth, forgetpass)
+      .then(() => {
+        toast.success('Email Send', {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        Navigate("/")
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+        console.log(error);
+      });
+    }
+  }
+  // forget pass end
 
 
+  let handlegooglelogin = () =>{
+    signInWithPopup(auth, provider)
+    .then((result) => {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+      // The signed-in user info.
+      const user = result.user;
+      // IdP data available using getAdditionalUserInfo(result)
+      // ...
+      console.log(result);
+    }).catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.customData.email;
+      // The AuthCredential type that was used.
+      const credential = GoogleAuthProvider.credentialFromError(error);
+      // ...
+    });
+  }
+
+
+  // forget oparation start
   let initialvalues = {
     email: '',
     password: '',
   }
-
-  const auth = getAuth();
-
   const formik = useFormik({
     initialValues: initialvalues,
     validationSchema: loginvalidation,
@@ -150,6 +205,7 @@ const Login = () => {
         // alert(JSON.stringify(values, null, 2));
       },
   });
+  // forget oparation end
 
   // hide show oparation start
   let [show,setShow] = useState(true)
@@ -182,7 +238,7 @@ const Login = () => {
                   Login to your account!
               </Headinglogin>
 
-              <div className='logomain'>
+              <div onClick={handlegooglelogin} className='logomain'>
                 <Glogo />
                 <a href="#" className='googleic'>Login with Google</a>
               </div>
@@ -264,16 +320,19 @@ const Login = () => {
           <Box sx={style}>
             <h3 style={{marginBottom: '15px'}}>Enter Your Email</h3>
             <div>
-              <Inputbox
-                variant="standard" 
-                placeholder="Email Address"
-                id="forgetemail"
-                name="forgetemail"
-                type="email"
-              />
-              <BootstrapButton type='submit' variant="contained" disableRipple>
-                    forget password
-              </BootstrapButton>      
+              <form action="#">
+                <Inputbox
+                  variant="standard" 
+                  placeholder="Email Address"
+                  id="forgetemail"
+                  name="forgetemail"
+                  type="email"
+                  onChange={(e)=>{setforgetpass(e.target.value)}}
+                />
+                <BootstrapButton onClick={handleforgetpss} style={{padding:"14px 12px"}} type='submit' variant="contained" disableRipple>
+                      forget password
+                </BootstrapButton>
+              </form>      
             </div>
           </Box>
         </Fade>
