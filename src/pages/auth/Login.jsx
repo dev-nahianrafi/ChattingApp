@@ -119,29 +119,22 @@ const Login = () => {
   }
   // forget pass end
 
-
+  // log in with email
   let handlegooglelogin = () =>{
     signInWithPopup(auth, provider)
     .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential.accessToken;
-      // The signed-in user info.
       const user = result.user;
-      // IdP data available using getAdditionalUserInfo(result)
-      // ...
       console.log(result);
     }).catch((error) => {
-      // Handle Errors here.
       const errorCode = error.code;
       const errorMessage = error.message;
-      // The email of the user's account used.
       const email = error.customData.email;
-      // The AuthCredential type that was used.
       const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
     });
   }
+  // log in with email
 
 
   // forget oparation start
@@ -169,9 +162,12 @@ const Login = () => {
                 progress: undefined,
                 theme: "light",
               });
+              console.log(user);
               setInterval(()=>{
+                localStorage.setItem("loggedInUser", user)
                 navigate("/home")
               },2000);
+
               setloder(false)
             }else{
               toast.error('Please Verify Your Email', {
@@ -289,8 +285,7 @@ const Login = () => {
                     />
                     :
                     "Login to Continue"
-                  }
-                  
+                  }                 
                 </BootstrapButton>
               </form>
               <span style={{color:"#03014C", fontSize:"14px",}}>Don’t have an account ? <a href="/registration" style={{color:"#EA6C00"}}>Sign up</a></span>
