@@ -17,6 +17,10 @@
 .sidebarProfile{
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
 }
 .sidebarItem ul{
     display: flex;

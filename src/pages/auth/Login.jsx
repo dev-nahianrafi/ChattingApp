@@ -17,11 +17,12 @@ import * as React from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
-import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup} from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup, signOut} from "firebase/auth";
 import { ToastContainer, toast } from 'react-toastify';
 import { Navigate, useNavigate } from "react-router-dom";
 import { ThreeDots } from 'react-loader-spinner';
-
+import { useSelector, useDispatch } from 'react-redux'
+import { logedinUser } from '../../slices/authSlice';
 
 
 
@@ -88,6 +89,7 @@ const Login = () => {
   const [forgetpass, setforgetpass] = useState("")
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
+  const dispatch = useDispatch()
   
 
   // forget pass oparation stat
@@ -123,10 +125,47 @@ const Login = () => {
   let handlegooglelogin = () =>{
     signInWithPopup(auth, provider)
     .then((result) => {
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
       const user = result.user;
-      console.log(result);
+      console.log(user);
+
+      if(user.emailVerified){
+        localStorage.setItem("loggedinUser", JSON.stringify(user))
+        dispatch(logedinUser(user))
+        toast.success('Login Success', {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setInterval(()=>{
+          navigate("/home")
+        },2000);
+
+        setloder(false)
+      }else{        
+        toast.error('Please Verify Your Email', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          });
+        setloder(false)
+          signOut(auth).then(() => {
+            // localStorage.removeItem("loggedinUser")
+            // dispatch(logedinUser(null))
+            // Sign-out successful.
+          }).catch((error) => {
+            // An error happened.
+          });
+      }
     }).catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -152,6 +191,8 @@ const Login = () => {
           .then((userCredential) => {
             const user = userCredential.user
             if(user.emailVerified){
+              localStorage.setItem("loggedinUser", JSON.stringify(user))
+              dispatch(logedinUser(user))
               toast.success('Login Success', {
                 position: "top-right",
                 autoClose: 2000,
@@ -164,12 +205,11 @@ const Login = () => {
               });
               console.log(user);
               setInterval(()=>{
-                localStorage.setItem("loggedInUser", user)
                 navigate("/home")
               },2000);
 
               setloder(false)
-            }else{
+            }else{        
               toast.error('Please Verify Your Email', {
                 position: "top-right",
                 autoClose: 5000,
@@ -182,6 +222,13 @@ const Login = () => {
                 });
               setloder(false)
               actions.resetForm()
+                signOut(auth).then(() => {
+                  // localStorage.removeItem("loggedinUser")
+                  // dispatch(logedinUser(null))
+                  // Sign-out successful.
+                }).catch((error) => {
+                  // An error happened.
+                });
             }
           })
           .catch((error) => {
