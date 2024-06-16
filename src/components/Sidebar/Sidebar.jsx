@@ -14,6 +14,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { logedinUser } from "../../slices/authSlice";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { useEffect } from "react";
 
 const Logout = styled(LuLogOut)({
   fontSize: "46px",
@@ -28,13 +29,19 @@ const Sidebar = () => {
   const dispatch = useDispatch()
 
   // console.log(data);
+  // useEffect(()=>{
+  //   if(data){
+  //     console.log("login first");
+  //   }else{
+  //     navigate("/")
+  //   }
+  // },[])
 
   const handlelogOut = () =>{
     signOut(auth).then(() => {
       localStorage.removeItem("loggedinUser")
       dispatch(logedinUser(null))
       navigate("/")
-      // Sign-out successful.
     }).catch((error) => {
       // An error happened.
     });

@@ -203,7 +203,7 @@ const Login = () => {
                 progress: undefined,
                 theme: "light",
               });
-              console.log(user);
+              // console.log(user);
               setInterval(()=>{
                 navigate("/home")
               },2000);
@@ -245,7 +245,6 @@ const Login = () => {
               });
             setloder(false)
           });
-        // alert(JSON.stringify(values, null, 2));
       },
   });
   // forget oparation end
